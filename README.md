@@ -22,6 +22,7 @@ You will need some familiarity with transformers architecture. If you are a comp
 
 Code has 3 parts, structs, functions & read logic in `main()` we will take a look at structs first, then go to main() and then cover each function.
 
+**PS: The code might be different in repo since as gets newer commits.** But 99% of the logic should remain the same :) 
 
 ### Part 1: Structs
 
@@ -113,7 +114,8 @@ We will take a look at functions as we encounter them. For now lets see the logi
 1. Get command line arguments. Nothing interesting.  Currently you can call `run.c` with
 	1. `./run llama2_7b.bin`
 	2. `./run llama2_7b.bin 0.1` -> with temperature
-	3. `./run llama2_7b.bin 0.1 100` -> with temperature & steps (no. of output tokens generated) 
+	3. `./run llama2_7b.bin 0.1 100` -> with temperature & steps (no. of output tokens generated)
+ 
 2. Declare `config` & `weights` in the end
 ```c
 int main(int argc, char *argv[]) {
