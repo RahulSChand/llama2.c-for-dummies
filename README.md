@@ -1,7 +1,7 @@
 # llama2.c-for-dummies
 
 ### Purpose
-This repo is line by line go through of the inference file in [llama2.c](http://github.com/karpathy/llama2.c). Its very verbose & intended for beginners.
+This repo is line by line walk through of the inference file in [llama2.c](http://github.com/karpathy/llama2.c). Its very verbose & intended for beginners.
 
 You will need some familiarity with transformers architecture. If you are a complete novice refer to this excellent [blog](https://jalammar.github.io/illustrated-transformer/) first.
 
@@ -11,7 +11,7 @@ You will need some familiarity with transformers architecture. If you are a comp
 
 1. Transformer architecture: 3 components
 	1. Embedding (1 matmul)
-	2. Layers: matmul with Q, K , V, O and feed foward weights: W1, W2, W3 (7 matmul)
+	2. Layers: matmul with Q, K , V, O and feed foward weights: W1, W2 & W3. (7 matmul)
 	3. Classifier: In our case the classifier is just matmul of `(vocab,768) x (768,1)` . Basically giving us what is the probability of each next token. (1 matmul)
 
 <img src="./imgs/arch.png" width="400" height="400">
@@ -19,7 +19,7 @@ You will need some familiarity with transformers architecture. If you are a comp
 
 ## Code walkthrough
 
-Code has 3 parts, structs, functions & read logic in `main()` we will take a look at structs first, then go to main() and then cover each function.
+Code has 3 parts, structs, functions & read logic in `main()` we will take a look at structs first, then go to main() and then cover the important functions.
 
 **PS: The code was taken from commit 4e23ad83. The original repo might be different as it gets newer commits.** But 99% of the logic should remain the same :) 
 
@@ -222,11 +222,11 @@ Original code we are talking about in above section
 
 ---
 
-#### Forward Loop in main (Go to [important part](#actual-forward-pass))
+#### Forward Loop & sampling in main (Go to [important part](#actual-forward-pass))
 
 1. Allocate memory for run state/intermediate values. The first `token` we pass into our model is BOS token ("Beginning of Statement") who's vocab index is `1`. 
 ```c
-	RunState state;
+    RunState state;
     malloc_run_state(&state, &config);
     
     // the current position we are in
@@ -526,7 +526,7 @@ matmul(s->logits, x, w->wcls, p->dim, p->vocab_size);
 ---
 ### The end
 
-Once we get `s->logits` we sample which has already been covered above.  Congratulations now you know how LLMs work. Here is a picture of a cat :) 
+Once we get `s->logits` we sample next token (do this until we get `seq_length` tokens). This has already been covered in "Forward Loop & sampling in main" section.  Congratulations! now you know how LLMs work & how to code them in C. Here is a picture of a cat :)  
 
 <img src="./imgs/cat.jpg" width="700" height="500">
 
