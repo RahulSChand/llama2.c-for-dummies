@@ -108,7 +108,7 @@ typedef struct {
 
 We will take a look at functions as we encounter them. For now lets see the logic inside `main()` 
 
-### Part 2: Main (Can skip this part if you are only interested in forward logic)
+### Part 2: Main (Can skip this part if you are only interested in [forward logic](#actual-forward-pass) )
 
 1. Get command line arguments. Nothing interesting.  Currently you can call `run.c` with
 	1. `./run llama2_7b.bin`
@@ -222,7 +222,7 @@ Original code we are talking about in above section
 
 ---
 
-#### Forward Loop in main
+#### Forward Loop in main (Go to [important part](#actual-forward-pass))
 
 1. Allocate memory for run state/intermediate values. The first `token` we pass into our model is BOS token ("Beginning of Statement") who's vocab index is `1`. 
 ```c
