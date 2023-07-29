@@ -1,4 +1,4 @@
-# llama2.c-for-dummies
+# llama2.c For Dummies
 
 ### Purpose
 This repo is line by line walk through of the inference file in [llama2.c](http://github.com/karpathy/llama2.c). Its very verbose & intended for beginners.
