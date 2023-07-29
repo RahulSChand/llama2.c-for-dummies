@@ -419,7 +419,7 @@ This part of the code becomes easy if you remember that `s->q`, `s->k` when view
 	 3. For each position (`pos` is 2 currently if you go back to "fox", "jumps", "over" example) 
 			 1.To get  $l^{th}$ layer, $t^{th}$ position & $h^{th}$ head we do `s->key_cache + l*seq_length*dim + t*n_heads*head_dim + h*head_dim` . Since `loff` defined before is already `l*seq_length*dim`. Final offset is `loff + t*n_heads*head_dim + h*head_size` since `n_heads*head_dim=dim` we get offset as `loff + t*dim + h*head_size`.
 	1. We now have `q` `(head_size,)`, `k` `(head_size,)`  & `att` `(seq_length,)`. We can calculate self-attention score for $h^{th}$ head at position $t$.  We sum this over all the heads & positions till now.
-	```c
+```c
 	int h;        
 	#pragma omp parallel for private(h)
 	for (h = 0; h < p->n_heads; h++) {
@@ -438,8 +438,9 @@ This part of the code becomes easy if you remember that `s->q`, `s->k` when view
 		}
 		score /= sqrtf(head_size);
 		// save the score to the attention buffer
-		att[t] = score;		
-```
+		att[t] = score;
+ ```
+
 
 2. `attn` obtained above is of shape `(seq_length, )`. Next we multiply it with `v` which is `(seq_length, dim)`. Remember the below loop is inside the `for (h = 0; h < p->n_heads; h++)` that started in previous section.
 
