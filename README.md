@@ -15,7 +15,7 @@ You will need some familiarity with transformers architecture. If you are a comp
 	2. Layers: matmul with Q, K , V, O and feed foward weights: W1, W2, W3 (7 matmul)
 	3. Classifier: In our case the classifier is just matmul of `(vocab,768) x (768,1)` . Basically giving us what is the probability of each next token. (1 matmul)
 
-![[Pasted image 20230729212049.png | 400x400]]
+<img src="./imgs/arch.png" width="400" height="400">
 
 
 ## Code walkthrough
@@ -77,7 +77,7 @@ typedef struct {
 } TransformerWeights;
 ```
 
-![[Pasted image 20230729213015.png]]
+<img src="./imgs/arr.png" width="700" height="200">
 
 ---
 
