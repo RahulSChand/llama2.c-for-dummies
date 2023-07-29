@@ -477,7 +477,7 @@ accum(x, s->xb2, dim);
 // ffn rmsnorm
 rmsnorm(s->xb, x, w->rms_ffn_weight + l*dim, dim);
 ```
-![accum](accum.png)
+<img src="./imgs/accum.png" width="400" height="400">
 
 
 2. Next we calculate the FFN output which is
@@ -527,6 +527,7 @@ matmul(s->logits, x, w->wcls, p->dim, p->vocab_size);
 
 Once we get `s->logits` we sample which has already been covered above.  Congratulations now you know how LLMs work. Here is a picture of a cat :) 
 
+<img src="./imgs/cat.jpg" width="700" height="500">
 
 
 
