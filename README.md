@@ -1,8 +1,7 @@
 # llama2.c-for-dummies
 
-
 ### Purpose
-This repo is line by line go through of the inference file in llama2.c.  Its very verbose & intended for beginners.
+This repo is line by line go through of the inference file in [llama2.c](http://github.com/karpathy/llama2.c). Its very verbose & intended for beginners.
 
 You will need some familiarity with transformers architecture. If you are a complete novice refer to this excellent [blog](https://jalammar.github.io/illustrated-transformer/) first.
 
@@ -22,7 +21,7 @@ You will need some familiarity with transformers architecture. If you are a comp
 
 Code has 3 parts, structs, functions & read logic in `main()` we will take a look at structs first, then go to main() and then cover each function.
 
-**PS: The code might be different in repo since as gets newer commits.** But 99% of the logic should remain the same :) 
+**PS: The code was taken from commit 4e23ad83. The original repo might be different as it gets newer commits.** But 99% of the logic should remain the same :) 
 
 ### Part 1: Structs
 
@@ -345,9 +344,10 @@ So `RoPE` transformed `[0.8, 0.5, -0.1, 0.3]` into `[0.8, 0.58, 0.1, 0.08]`. Kee
 ```
 
 2. Iterate over layers. Apply `rmsnorm` to input of the layer.  `rmsnorm` function calculates the below
-$$
+
+```math
 out\; = \;  (x*g*n)/\sum_{i} \sqrt{x_{i}^{2}} 
-$$
+```
 where $x$ is input, $g$ is learnable parameter (`w->rms_attn_weight` below) & $n$ is `dim`.
 
 `matmul` does matrix mult of a 2d matrix with a 1d matrix. `(A, B) x (A,)`. The implementation is trivial (we cover this at very end). We multiply Q,K,V with `s->xb` (output of `rmsnorm`) and store output in `s->q`, `s->k` ..
@@ -403,12 +403,12 @@ memcpy(value_cache_row, s->v, dim*sizeof(*value_cache_row));
 
 Formula
 
-$$
+```math
 \begin{align} 
 out = (QK^{T})\;V/\sqrt{d} \\
 where\;\;\; Q=(1,dim) \;\; K=(dim,N) \;\; V=(dim,N)
 \end{align}
-$$
+```
 In above $N$ is `pos` (current length of the generated text)
 
 
@@ -477,13 +477,13 @@ accum(x, s->xb2, dim);
 // ffn rmsnorm
 rmsnorm(s->xb, x, w->rms_ffn_weight + l*dim, dim);
 ```
-![accum](accum.png)
+<img src="./imgs/accum.png" width="400" height="400">
 
 
 2. Next we calculate the FFN output which is
-$$
+```math
 out = W_{3}(W_{1}X*W_{2}X)
-$$
+```
 This portion is self explanatory 
 ```c
 // Now for FFN in PyTorch we have: self.w2(F.silu(self.w1(x)) * self.w3(x))
@@ -527,6 +527,7 @@ matmul(s->logits, x, w->wcls, p->dim, p->vocab_size);
 
 Once we get `s->logits` we sample which has already been covered above.  Congratulations now you know how LLMs work. Here is a picture of a cat :) 
 
+<img src="./imgs/cat.jpg" width="700" height="500">
 
 
 
