@@ -532,7 +532,9 @@ matmul(s->logits, x, w->wcls, p->dim, p->vocab_size);
 ---
 ### The end
 
-Once we get `s->logits` we sample next token (do this until we get `seq_length` tokens). This has already been covered in "Forward Loop & sampling in main" section.  Congratulations! now you know how LLMs work & how to code them in C. Here is a picture of a cat :)  
+Once we get `s->logits` we sample next token (do this until we get `seq_length` tokens). This has already been covered in "Forward Loop & sampling in main" section.  Congratulations! now you know how LLMs work & how to code them in C. If you now want to know how to code them in Python know, refer to [modelling_llama.py](https://github.com/huggingface/transformers/blob/main/src/transformers/models/llama/modeling_llama.py)
+
+Here is a picture of a cat :)  
 
 <img src="./imgs/cat.jpg" width="700" height="500">
 
