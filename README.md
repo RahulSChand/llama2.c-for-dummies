@@ -149,7 +149,7 @@ int main(int argc, char *argv[]) {
 
 	Details
 	1.  `shared_weights` : Should input embedding matrix & output classifier matrix be same? 
-	2. Next load into `weights`. Get file size via `file_size = ftell(file);` Unlike vanilla PyTorch inference we **don't** load all weights into RAM. Instead we call `mmap(..)` to allocate RAM memory when we want lazily. For more detail [read](https://stackoverflow.com/questions/5877797/how-does-mmap-work
+	2. Next load into `weights`. Get file size via `file_size = ftell(file);` Unlike vanilla PyTorch inference we **don't** load all weights into RAM. Instead we call `mmap(..)` to allocate RAM memory when we want lazily. For more detail [read](https://stackoverflow.com/questions/5877797/how-does-mmap-work)
 	3. Finally  call `checkpoint_init_weights`  (snippet of function below). Here we map our weight pointers to correct address returned by `mmap`. Since we already read config we offset for it in line  `float* weights_ptr = data + sizeof(Config)/sizeof(float);`
 ```c
 void checkpoint_init_weights(TransformerWeights *w, Config* p, float* f, int shared_weights){
