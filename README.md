@@ -483,8 +483,14 @@ rmsnorm(s->xb, x, w->rms_ffn_weight + l*dim, dim);
 
 2. Next we calculate the FFN output which is
 ```math
-out = W_{3}(W_{1}X*W_{2}X)
+out = W_{3}\;\sigma (W_{1}X*W_{2}X)
 ```
+$\sigma$ is `silu` [activation](https://pytorch.org/docs/stable/generated/torch.nn.SiLU.html). 
+
+
+<img src="https://pytorch.org/docs/stable/_images/SiLU.png" width="400" height="400">
+
+
 This portion is self explanatory 
 ```c
 // Now for FFN in PyTorch we have: self.w2(F.silu(self.w1(x)) * self.w3(x))
