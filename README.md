@@ -295,7 +295,7 @@ void transformer(int token, int pos, Config* p, RunState* s, TransformerWeights*
 ---
 **RoPE** : Rotary Positional Embeddings 
 - Formulation:  Transforms feature pairs by rotating it in 2D plane.
-	e.g. If your vector is `[0.8, 0.5, -0.1, 0.3]` we group them into pairs: `[[0.8,-0.1], [0.5, 0.3]` and rotate by some angle $\theta$. This $\theta$ is --part of the weights & is learned during training-- $\theta$ is fixed from the start (its not learnable). In the paper the value of $\theta$ is $10000^{2(i-1}/d}$ 
+	e.g. If your vector is `[0.8, 0.5, -0.1, 0.3]` we group them into pairs: `[[0.8,-0.1], [0.5, 0.3]` and rotate by some angle $\theta$. This $\theta$ is ~~part of the weights & is learned during training~~ $\theta$ is fixed from the start (its not learnable). In the paper the value of $\theta_{i}$ is $100^{2(i-1)/d}$ 
 
 RoPE  Formula (For 2 features grouped into a pair) is below. $m$ is the index of the pair. $\theta$ is a learned parameter that we load from `.bin` file
 
