@@ -28,9 +28,9 @@ Code has 3 parts, structs, functions & read logic in `main()` we will take a loo
 We define 3 structs for storing model config, model weights & to store intermediate values (run state) during forward pass
 
 1. **Config struct**: Defines the transformer model.
-	1. `n_layers` , `vocab_size`  : Self explanatory
-	2. `dim` and `hidden_dim` : Define shape of Q, K, V & O and W1, W2 & W3 params.
-	3. `n_heads` : Number of heads for query(Q). If `n_heads=12` then matrix `Q=(768,768)` behaves/viewed as `(12,768/12,768)`
+	1. `n_layers` , `vocab_size`  : no. of layers (e.g. llama-2 has 32 layers/BERT-base has 12 layers) & no. of tokens in our vocabulary (this is usually 30k for english languages)
+	2. `dim` and `hidden_dim` : Define shape of Q, K, V & O `(dim,dim)` and W1, W2 `(dim, hidden_dim)`& W3 `(hidden_dim, dim)` 
+	3. `n_heads` : Number of heads for query(Q). If `n_heads=12` then matrix `Q=(768,768)` behaves/viewed as `(768, 768/12,768)`
 	4. `n_kv_heads` : Number of heads for K & V. **Why are these different from above?** : Read [multi query paper](https://arxiv.org/pdf/1911.02150.pdf)
 	5. `seq_len` : No. of tokens we will generate
 ```c
@@ -83,7 +83,7 @@ typedef struct {
 
 3. Intermediate activations (Run state)
 	1. During forward pass we need to store intermediate values, e.g. output of matmul or output after norm. Will take a look at all variables later
-	2. `key_cahce` and `value_cache` store the key, value outputs of previous tokens. e.g. during inference if the 5th token is being generated, this will store `key`, `value` of previous 4.
+	2. `key_cahce` and `value_cache` store the key, value outputs of previous tokens. e.g. during inference if the 5th token is being generated, this will store `key`, `value` of the previous 4.
 
 ```c
 typedef struct {
@@ -148,7 +148,7 @@ int main(int argc, char *argv[]) {
 	1. If you are familiar with PyTorch. Usually  `config.json` & `model.bin` are separate (we load weights like a dictionary). But here `train.py` saves everything in one `.bin`  file in a specific format. This specific format allows us to easily read config & then each weight one by one.
 
 	Details
-	1.  `shared_weights` : Should input embedding matrix & output classifier matrix be same? 
+	1.  `shared_weights` : Should input embedding matrix & output classifier matrix be same?  
 	2. Next load into `weights`. Get file size via `file_size = ftell(file);` Unlike vanilla PyTorch inference we **don't** load all weights into RAM. Instead we call `mmap(..)` to allocate RAM memory when we want lazily. For more detail [read](https://stackoverflow.com/questions/5877797/how-does-mmap-work)
 	3. Finally  call `checkpoint_init_weights`  (snippet of function below). Here we map our weight pointers to correct address returned by `mmap`. Since we already read config we offset for it in line  `float* weights_ptr = data + sizeof(Config)/sizeof(float);`
 ```c
@@ -239,8 +239,14 @@ Original code we are talking about in above section
 
 2. Forward loop:
 	1. `transformer(token, pos, &config, &state, &weights);` stores classifier score of each token as being the next token in sequence inside `state.logits`.(contents of `transformer` function convered in next section). 
-	2. Next we sample. Greedy sample is trivial, get max in `state.logits` array. For `temperate>0`  convert `state.logits` into probabilities using softmax & store back in `state.logits`. The `sample(..)` function returns a token sampled from the `state.logits` probability distribution. Read more [here](https://web.mit.edu/urban_or_book/www/book/chapter7/7.1.3.html) 
-	3. The token generated `next` becomes the next input token in line `token=next`. 
+	2. Next we sample. **Why we need sampling & how to do it?**
+ 		- Lets say you want AI to complete dialogues of a movie & your input is _"Luke, I am your"_ . Now `llama` gives you score for each token to be the next word. So e.g. assume our tokens are `["Apple", "Football", "Father", "Brother"]` & llama gives them scores of `[0.3, 0.1, 0.9, 0.7]`. Now to pick the next token, either we take maximum (`"Father"` with score 0.9) or we sample tokens with a probability proportional to thier score, this way we can get more diversity(very important in today's world 😁) in our prediction.
+   "Luke, I am your father" (max sampling) 
+
+    Greedy sample is trivial, get max in `state.logits` array. Lets say our prompt was "
+ 
+ For `temperate>0`  convert `state.logits` into probabilities using softmax & store back in `state.logits`. The `sample(..)` function returns a token sampled from the `state.logits` probability distribution. Read more [here](https://web.mit.edu/urban_or_book/www/book/chapter7/7.1.3.html) 
+	4. The token generated `next` becomes the next input token in line `token=next`. 
 ```c
 while (pos < steps) {
         // forward the transformer to get logits for the next token
