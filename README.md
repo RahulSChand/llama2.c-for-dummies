@@ -237,16 +237,15 @@ Original code we are talking about in above section
     printf("<s>\n"); // explicit print the initial BOS token (=1), stylistically symmetric
 ```
 
+<img src="./imgs/luke.jpeg" width="600" height="500">
+
 2. Forward loop:
 	1. `transformer(token, pos, &config, &state, &weights);` stores classifier score of each token as being the next token in sequence inside `state.logits`.(contents of `transformer` function convered in next section). 
 	2. Next we sample. **Why we need sampling & how to do it?**
- 		- Lets say you want AI to complete dialogues of a movie & your input is _"Luke, I am your"_ . Now `llama` gives you score for each token to be the next word. So e.g. assume our tokens are `["Apple", "Football", "Father", "Brother"]` & llama gives them scores of `[0.3, 0.1, 0.9, 0.7]`. Now to pick the next token, either we take maximum (`"Father"` with score 0.9) or we sample tokens with a probability proportional to thier score, this way we can get more diversity(very important in today's world 😁) in our prediction.
-   "Luke, I am your father" (max sampling) 
+ 		- Lets say you want AI to complete dialogues of a movie & your input is _"Luke, I am your"_ . Now `llama` gives you score for each token to be the next word. So e.g. assume our tokens are `["Apple", "Football", "Father", "Brother"]` & llama gives them scores of `[0.3, 0.1, 0.9, 0.7]`. Now to pick the next token, either we take maximum (`"Father"` with score 0.9) or we sample tokens with a probability proportional to thier score, this way we can get more diversity(very important in today's world 😁) in our prediction. 
 
-    Greedy sample is trivial, get max in `state.logits` array. Lets say our prompt was "
- 
- For `temperate>0`  convert `state.logits` into probabilities using softmax & store back in `state.logits`. The `sample(..)` function returns a token sampled from the `state.logits` probability distribution. Read more [here](https://web.mit.edu/urban_or_book/www/book/chapter7/7.1.3.html) 
-	4. The token generated `next` becomes the next input token in line `token=next`. 
+ 	3. Lets discuss some more details: If `temperature=0` then its max sampling.  For `temperate>0` we convert `state.logits` into probabilities using softmax & store back in `state.logits`. The `sample(..)` function returns a token sampled from the `state.logits` probability distribution. Read more [here](https://web.mit.edu/urban_or_book/www/book/chapter7/7.1.3.html) 
+	5. The token generated `next` becomes the next input token in line `token=next`. 
 ```c
 while (pos < steps) {
         // forward the transformer to get logits for the next token
