@@ -11,7 +11,7 @@ You will need some familiarity with transformers architecture. If you are a comp
 
 1. Transformer architecture: 3 components
 	1. Embedding (1 matmul)
-	2. Layers: matmul with Q, K , V, O and feed foward weights: W1, W2 & W3. (7 matmul)
+	2. Layers: matmul with Q, K , V, O and feed forward weights: W1, W2 & W3. (7 matmul)
 	3. Classifier: In our case the classifier is just matmul of `(vocab,768) x (768,1)` . Basically giving us what is the probability of each next token. (1 matmul)
 
 <img src="./imgs/arch.png" width="400" height="400">
