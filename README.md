@@ -338,7 +338,7 @@ $$
 $$
 
 Combining both, the output is `[[0.8, 0.1], [0.58, 0.08]]` now **un-pairing** them will give us `[0.8, 0.58, 0.1, 0.08]`
-So `RoPE` transformed `[0.8, 0.5, -0.1, 0.3]` into `[0.8, 0.58, 0.1, 0.08]`. Keep in mind if a feature is of `dim=768` then there are half of it **384** learnable $\theta$'s. 
+So `RoPE` transformed `[0.8, 0.5, -0.1, 0.3]` into `[0.8, 0.58, -0.1, 0.08]`. Keep in mind if a feature is of `dim=768` then there are half of it **384** $\theta$'s. 
 
 **Back to code**
 1. We get $\theta$ for current position (`pos` is our $m$).  `freq_cis_real_row` is $cos(m\theta)$ and `freq_cis_imag_row` is $sin(m\theta)$.
